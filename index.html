@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌸 AIKO BBF — Keuangan</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <header>
+      <div class="header-left">
+        <h1>🌸 AIKO BBF</h1>
+        <p class="subtitle">Bismillah Bebas Finansial 2026</p>
+      </div>
+      <div class="header-right">
+        <span id="bulanSekarang" class="badge"></span>
+        <button id="refreshBtn" onclick="loadData()">🔄</button>
+      </div>
+    </header>
+
+    <!-- LOADING & ERROR -->
+    <div id="loading" class="loading hidden">Memuat data...</div>
+    <div id="error" class="error hidden"></div>
+
+    <!-- RINGKASAN -->
+    <section class="ringkasan">
+      <div class="card card-income">
+        <div class="card-label">💵 Pemasukan</div>
+        <div class="card-value" id="totalIncome">-</div>
+      </div>
+      <div class="card card-expense">
+        <div class="card-label">💸 Pengeluaran</div>
+        <div class="card-value" id="totalExpense">-</div>
+      </div>
+      <div class="card card-saving">
+        <div class="card-label">💰 Sisa</div>
+        <div class="card-value" id="totalSisa">-</div>
+      </div>
+      <div class="card card-rate">
+        <div class="card-label">📈 Saving Rate</div>
+        <div class="card-value" id="savingRate">-</div>
+      </div>
+    </section>
+
+    <!-- TREN BULANAN -->
+    <section>
+      <h2>📊 Tren Bulanan</h2>
+      <div class="grafik-container">
+        <canvas id="grafikBulanan"></canvas>
+      </div>
+    </section>
+
+    <!-- REKAP PER KATEGORI -->
+    <section>
+      <h2>🏷️ Pengeluaran per Kategori</h2>
+      <div class="kategori-grid" id="kategoriGrid"></div>
+    </section>
+
+    <!-- TRANSAKSI TERBARU -->
+    <section>
+      <h2>📋 Transaksi Terbaru</h2>
+      <div class="filter-bar">
+        <select id="filterBulan" onchange="loadData()">
+          <option value="all">Semua Bulan</option>
+        </select>
+        <select id="filterKategori" onchange="loadData()">
+          <option value="all">Semua Kategori</option>
+        </select>
+      </div>
+      <div id="transaksiList" class="transaksi-list"></div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>🌸 AIKO BBF — Data dari Google Sheets • Update otomatis</p>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
