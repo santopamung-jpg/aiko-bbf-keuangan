@@ -67,10 +67,34 @@ function render(data) {
   document.getElementById('bulanSekarang').textContent = bulanNames[d.getMonth()] + ' ' + d.getFullYear();
   
   renderChart(data.bulanan);
-  renderKategori(data.kategori || []);
+  
+  // Kategori: hitung dari transaksi yang ada
+  const kategori = (data.kategori || []).length > 0 ? data.kategori : hitungKategoriDariTransaksi(dataTransaksi);
+  renderKategori(kategori);
+  
   dataTransaksi = data.transaksi || [];
   renderTransaksi(dataTransaksi);
   renderFilter(data);
+}
+
+// Hitung kategori dari data transaksi (akurat!)
+function hitungKategoriDariTransaksi(tx) {
+  const map = {};
+  tx.forEach(t => {
+    const kat = t.kat || 'Lain-lain';
+    const nama = kat.replace(/^Makan.*/,'Makan').replace(/^Belanja.*/,'Belanja');
+    map[nama] = (map[nama] || 0) + (t.nilai || 0);
+  });
+  const warnaMap = {
+    'Makan':'#fbbf24','Transport':'#60a5fa','Tagihan':'#f87171',
+    'Belanja':'#34d399','Kesehatan':'#ec4899','Saving':'#10b981',
+    'Rokok & Kopi':'#a78bfa','Lain-lain':'#6b7280','Service':'#f97316',
+    'Pakaian':'#8b5cf6','Rekreasi':'#06b6d4','Saham':'#6366f1','Modal':'#14b8a6'
+  };
+  return Object.entries(map)
+    .filter(([_,v]) => v > 0)
+    .map(([nama, nilai]) => ({ nama, nilai, warna: warnaMap[nama] || '#6b7280' }))
+    .sort((a,b) => b.nilai - a.nilai);
 }
 
 // === CHART ===
