@@ -4,6 +4,9 @@
 
 // === KONFIGURASI ===
 const CONFIG = {
+  // Data statis dari sheet (diupdate otomatis via GitHub Action)
+  dataUrl: 'data/data.json',
+  // Fallback API (Apps Script)
   apiUrl: 'https://script.google.com/macros/s/AKfycbwcank1DonC7SeupXIf3dXxwqNuh1WvaSXppUphiyjICrcTj5SVuPldCYCJPTQgbInzgQ/exec',
 };
 
@@ -38,8 +41,18 @@ async function loadData() {
   }
 }
 
-// === FETCH DARI APPS SCRIPT ===
+// === FETCH DATA ===
 async function fetchApi() {
+  // Coba baca data.json dulu (data statis lengkap)
+  try {
+    const res = await fetch(CONFIG.dataUrl);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.bulanan) return data;
+    }
+  } catch(e) { /* fallback ke API */ }
+  
+  // Fallback: Apps Script API
   const res = await fetch(CONFIG.apiUrl);
   if (!res.ok) throw new Error('Gagal konek ke server (HTTP ' + res.status + ')');
   const data = await res.json();
@@ -68,7 +81,7 @@ function render(data) {
   
   renderChart(data.bulanan);
   
-  // Kategori: hitung dari transaksi yang ada
+  // Kategori: dari data (sudah lengkap dari sheet)
   const kategori = (data.kategori || []).length > 0 ? data.kategori : hitungKategoriDariTransaksi(dataTransaksi);
   renderKategori(kategori);
   
